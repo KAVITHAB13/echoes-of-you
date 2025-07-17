@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: echoes-backend
+    env: python
+    buildCommand: ""
+    startCommand: uvicorn server:app --host 0.0.0.0 --port 10000
+    plan: free
+    runtime: python
+    autoDeploy: true
+
+  - type: web
+    name: echoes-frontend
+    env: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    plan: free
+    autoDeploy: true
