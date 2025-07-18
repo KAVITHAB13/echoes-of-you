@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import os
@@ -20,23 +20,24 @@ app = FastAPI()
 # CORS setup to allow frontend to talk to backend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # or ["http://localhost:5173"] for stricter setup
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-class PoemRequest(BaseModel):
+class MotivationRequest(BaseModel):
     text: str
 
 @app.post("/generate")
-async def generate_poem(request: PoemRequest):
+async def generate_motivation(request: MotivationRequest):
     try:
-        prompt = f"Write a poetic response based on this: {request.text}"
+        prompt = f"Provide a short, motivational or positive sentence to encourage someone who says: '{request.text}'"
         messages = [{"role": "user", "content": prompt}]
         response = client.chat_completion(messages)
         reply = response.choices[0].message.content.strip()
-        return {"poem": reply}
+        return {"sentence": reply}
     except Exception as e:
         print("❌ Error in server:", e)
-        return {"error": "Poem generation failed"}
+        return {"error": "Motivation generation failed"}
+
